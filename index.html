@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="cette page web est le jeux mémory réaliser par Rémi Deschamps pendant sa formation de développeur web et web mobile au centre Afpa de Istres(13)"
+    />
+    <title>jeux Memory - retrouver les paires d'images</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Frijole&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="js/script.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Bienvenue au jeu MEMORIES</h1>
+      <div class="container-parameters">
+        <h2>Difficulté</h2>
+        <div class="container-easy">
+          <label for="easy">Facile </label><span>😊</span>
+          <input type="radio" id="easy" name="difficult" checked />
+        </div>
+        <div class="container-normal">
+          <label for="normal">Normal </label><span>🤔</span>
+          <input type="radio" id="normal" name="difficult" />
+        </div>
+        <div class="container-difficult">
+          <label for="difficult">Difficile </label><span>🥵</span>
+          <input type="radio" id="difficult" name="difficult" />
+        </div>
+        <h2>Choix du dos de cartes</h2>
+        <div class="container-back-side-card">
+            <img src="./images/dos-Magic.jpg" alt="dos de carte magic" id="magicCard">
+            <img src="./images/dos-pokemon.jpg" alt="dos de carte pokemon" id="pokemonCard">
+            <img src="./images/dos-yu-gi-oh.jpg" alt="dos de carte yu-gi-oh" id="yugiohCard">
+        </div>
+    </div>
+    </header>
+    <main>
+      <h3>TEMPS</h3>
+      <div class="compteur">
+        <div class="compteur-hours compteur-items">00</div>
+        <div class="compteur-min compteur-items">00</div>
+        <div class="compteur-sec compteur-items">00</div>
+      </div>
+      <div class="card-container">
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="side side--front"></div>
+          <div class="side side--back">
+            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-startGame">Démarrer une partie</button>
+      <button class="btn btn-restartGame">Redémarrer une partie</button>
+    </main>
+  </body>
+</html>
