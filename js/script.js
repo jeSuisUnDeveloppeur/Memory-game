@@ -1,206 +1,211 @@
-import {commencerPartie,mixImages,recommencerPartie,viderTableaux} from "../lib/helpersFunctions.js";
-document.addEventListener("DOMContentLoaded", () => {
-    //Les variables et tableaux
-    const tableauxNbrsAleatoiresFacile = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+document.addEventListener('DOMContentLoaded',()=>{
+    const cardContainer = document.querySelector('.card-container');
+    const startButton = document.querySelector('.btn-startGame');
+    const restartButton = document.querySelectorAll('.btn-restartGame');
+    const difficultRadios = document.querySelectorAll('input[name="difficulty"]');
+    const backCards = document.querySelectorAll('.container-back-side-card>img');
+    const modal = document.querySelector(".modal-victory");
+    const playerTime = document.querySelector(".player-time");
+    const CompteurHours = document.querySelector(".compteur-hours");
+    const CompteurMin = document.querySelector(".compteur-min");
+    const CompteurSec = document.querySelector(".compteur-sec");
 
-    const tableauxNbrsAleatoireNormal = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-        12,13,14,15,16,17,18,19,20,21,22,23,24
-    ];
+    let imgBackSides;
+    let timerInterval;
 
-    const tableauxNbrsAleatoireDifficle = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-        12,13,14,15,16,17,18,19,20,21,22,23,24,
-        25,26,27,28,29,30,31,32,33,34,36
-    ]
+    let difficulty = "easy";
+    let cardImages = [];
+    let cards = [];
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let pairsRevealed = 0;
 
-    const tableauxImagesFacile = [
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg",
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg"];
+    //Initialize the game
+    function init(){
+        difficultRadios.forEach(radio=>{
+            radio.addEventListener('change',handleDifficultyChange);
+        });
 
-    const tableauxImagesNormal = [
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg",
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg",
-        "../images/7.jpg",
-        "../images/8.jpg",
-        "../images/9.jpg",
-        "../images/10.jpg",
-        "../images/11.jpg",
-        "../images/12.jpg",
-        "../images/7.jpg",
-        "../images/8.jpg",
-        "../images/9.jpg",
-        "../images/10.jpg",
-        "../images/11.jpg",
-        "../images/12.jpg",
-    ];
+        backCards.forEach(backCard=>{
+            backCard.addEventListener('click',()=>changeCardBack(backCard.src));
+        });
 
-    const tableauxImagesDifficile = [
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg",
-        "../images/1.jpg",
-        "../images/2.jpg",
-        "../images/3.jpg",
-        "../images/4.jpg",
-        "../images/5.jpg",
-        "../images/6.jpg",
-        "../images/7.jpg",
-        "../images/8.jpg",
-        "../images/9.jpg",
-        "../images/10.jpg",
-        "../images/11.jpg",
-        "../images/12.jpg",
-        "../images/7.jpg",
-        "../images/8.jpg",
-        "../images/9.jpg",
-        "../images/10.jpg",
-        "../images/11.jpg",
-        "../images/12.jpg",
-        "../images/13.jpg",
-        "../images/14.jpg",
-        "../images/15.jpg",
-        "../images/16.jpg",
-        "../images/17.jpg",
-        "../images/18.jpg",
-        "../images/13.jpg",
-        "../images/14.jpg",
-        "../images/15.jpg",
-        "../images/16.jpg",
-        "../images/17.jpg",
-        "../images/18.jpg",
-    ];
-    //boutons démarrer et redémarrer une partie
-    const btnStartGame = document.querySelector(".btn-startGame");
-    const btnRestartGame = document.querySelector(".btn-restartGame");
-    //radio buttons difficultés
-    const easyDifficulty = document.querySelector("#easy");
-    const normalDifficulty = document.querySelector("#normal");
-    const hardDifficulty = document.querySelector("#difficult");
-    //tableaux qui contient les radios bouttons de difficulté
-    const difficulty = [
-        easyDifficulty,
-        normalDifficulty,
-        hardDifficulty
-    ];
-    //le conteneur de cartes, les cartes et les fronts side de cartes
-    const cardsContainer = document.querySelector(".card-container");
-    const cards = [...document.querySelectorAll(".card")];
-    const frontSidecards = [...document.querySelectorAll(".card>div.side.side--front")];
-    //tableaux index et src de l'image révélée
-    const indexCardsRevealed = [];
-    const imgCardsRevealed = [];
-    //variables victoire/défaite et faces révélé
-    let nbrFacesRevealed = 0;
-    let victory = 0;
-    let defeat = 6;
+        startButton.removeAttribute('disabled');
+        startButton.removeAttribute('style');
+        restartButton[1].disabled="true";
+        restartButton[1].style="box-shadow:none";
 
-    difficulty.forEach(element=>{
-        element.addEventListener("click",()=>{
-            switch(element.id){
-                case "easy":
-                    mixImages(tableauxImagesFacile,tableauxNbrsAleatoiresFacile,frontSidecards);
-                    break;
-                case "normal":
-                    mixImages(tableauxImagesNormal,tableauxNbrsAleatoireNormal,frontSidecards);
-                    break;
-                case "difficult":
-                    mixImages(tableauxImagesDifficile,tableauxNbrsAleatoireDifficle,frontSidecards);
-                    break;
+        startButton.addEventListener('click',()=>startGame());
+        generateGrid();
+        
+    }
+
+    function changeCardBack(backCardSrc){
+        imgBackSides = document.querySelectorAll('.card .side--back>img');
+        imgBackSides.forEach(imgBackSide=>{
+            imgBackSide.src = backCardSrc
+        })
+    }
+
+    //handle difficulty change
+    function handleDifficultyChange(event){
+        difficulty = event.target.value;
+        generateGrid();
+    }
+
+    //generate the card grid based on the selected difficulty
+    function generateGrid(){
+        cardContainer.innerHTML ="";
+        const numCards = getNumCards();
+        cardImages = generateCardImages(numCards);
+        cardImages = shuffleArray(cardImages);
+
+        cards = cardImages.map(image=>createCardElement(image));
+        cards.forEach(card=>cardContainer.appendChild(card));
+    }
+
+    //get the number of cards based on difficulty
+    function getNumCards(){
+        return difficulty === "easy" ? 12: difficulty === "normal" ? 24 : 36 ;
+    }
+
+    //generate the card images array
+    function generateCardImages(numCards){
+        const images = Array(numCards/2).fill().map((_,i)=>`images/${i+1}.jpg`);
+        return [...images,...images];
+    }
+
+    //Create a card element
+    function createCardElement(image){
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+        <div class="side side--back">
+            <img src="images/dos-Magic.jpg"/>
+        </div>
+        <div class="side side--front">
+            <img src="${image}"/>
+        </div>
+        `;
+        card.addEventListener('click',()=>flipCard);
+        return card;
+    }
+
+    //shuffle an array
+    function shuffleArray(array){
+        for(let i = array.length-1;i>0;i--){
+            const j = Math.floor(Math.random()*(i+1));
+            [array[i],array[j]] = [array[j],array[i]];
+        }
+        return array;
+    }
+
+    //handle card flip
+    function flipCard(){
+        if(lockBoard) return;
+        if(this === firstCard)return;
+
+        this.classList.add('flip');
+        if(!firstCard){
+            firstCard = this;
+            return;
+        }
+
+        secondCard = this;
+        checkForMatch();
+    }
+
+    //check if the flipped cards match
+    function checkForMatch(){
+        let isMatch = firstCard.querySelector('.side--front>img').src === secondCard.querySelector('.side--front>img').src;
+        isMatch?disableCards():unflipCards();
+    }
+
+    //disable the matched cards
+    function disableCards(){
+        pairsRevealed++;
+        if ((difficulty === "easy" && pairsRevealed === 6) ||
+            (difficulty === "normal" && pairsRevealed === 12) ||
+            (difficulty === "hard" && pairsRevealed === 18)) {
+            victory();
+        }
+        firstCard.removeEventListener('click',flipCard);
+        secondCard.removeEventListener('click',flipCard);
+        resetBoard();
+    }
+
+    //unflip the cards if they don't match
+    function unflipCards(){
+        lockBoard = true;
+        setTimeout(()=>{
+            firstCard.classList.remove('flip');
+            secondCard.classList.remove('flip');
+            resetBoard();
+        },1000)
+    }
+
+    //function reset the board
+    function resetBoard(){
+        [firstCard,secondCard,lockBoard] = [null,null,false];
+    }
+
+    //start the game
+    function startGame(){
+        startButton.disabled="true";
+        startButton.style.boxShadow = "none";
+        restartButton[1].removeAttribute('disabled');
+        restartButton[1].removeAttribute('style');
+        restartButton.forEach(button=>{
+            button.addEventListener('click',resetGame);
+        });
+        shuffleArray(cardImages);
+        cards.forEach((card,index)=>{
+            card.querySelector('.side--front>img').src = cardImages[index];
+            card.classList.remove('flip');
+            card.addEventListener("click",flipCard);
+        })
+        resetBoard();
+        startTimer(getTimeLimit());
+    }
+
+    function resetGame(){
+        modal.style.display="none";
+        clearInterval(timerInterval);
+        pairsRevealed = 0;
+        generateGrid();
+        init();
+    }
+
+    function getTimeLimit(){
+        return difficulty === "easy" ? 60 : difficulty ==='normal' ? 120 : 180;
+    }
+
+    function startTimer(duration){
+        let timer = duration,
+            minutes,
+            seconds;
+        timerInterval = setInterval(()=>{
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.querySelector('.compteur-min').textContent = minutes;
+            document.querySelector('.compteur-sec').textContent = seconds;
+
+            if(--timer < 0){
+                clearInterval(timerInterval);
+                alert("Temps écoulé !");
             }
-        })
-        })
-    })
-    
-    
-    //commencer une partie
-    btnRestartGame.disabled = true;
-    btnRestartGame.style = "box-shadow:none";
+        },1000)
+    }
 
-    btnStartGame.addEventListener("click", (event) => {
-        commencerPartie(btnStartGame, btnRestartGame, tableauxImages, tableauxNbrsAleatoires, frontSidecards);
-        cards.forEach((element,index)=>{
-            element.addEventListener("click",(event)=>{
-                    let frontSideOfElement = [...element.children][0];
-                    let imgOfFrontSide = frontSideOfElement.querySelector('img');
-                    let imgSrc = imgOfFrontSide.src;
-
-                if(nbrFacesRevealed < 2 ){
-                    event.currentTarget.style="transform:rotateY(180deg);";
-
-                    imgCardsRevealed.push(imgSrc);
-                    indexCardsRevealed.push(index);
-
-                    nbrFacesRevealed++;
-
-                    if(nbrFacesRevealed == 2){
-                        if(imgCardsRevealed[0] != imgCardsRevealed[1]){
-                            setTimeout(()=>{
-                                cards.forEach((element,index) => {
-                                    if(index == indexCardsRevealed[0] || index == indexCardsRevealed[1]){
-                                        element.style="transform:rotateY(360deg);";   
-                                    }
-                                });
-                                viderTableaux(imgCardsRevealed);
-                                viderTableaux(indexCardsRevealed); 
-                            },800)
-                                nbrFacesRevealed = 0; 
-                                defeat--;
-                                if(defeat == 0){
-                                    let defeatMessage = document.createElement('p');
-                                    defeatMessage.innerHTML = "Vous avez perdu !";
-                                }                       
-                        }
-                        else{
-                            if(imgCardsRevealed[0] == imgCardsRevealed[1]){
-                                viderTableaux(imgCardsRevealed);
-                                viderTableaux(indexCardsRevealed);
-                                nbrFacesRevealed = 0;
-                                victory++;
-                                if(victory == 6){
-                                    let VictoryMessage = document.createElement('p');
-                                }
-                            }
-                        } 
-                    }
-                }
-                 
-            })
-        })
-    });
-
-    //recommencer une partie
-    btnRestartGame.addEventListener("click", () => {
-        cards.forEach(element=>{
-            element.removeAttribute("style");
-    });
-    setTimeout(()=>{
-        nbrFacesRevealed = 0;
-        victory = 0;
-        defeat = 6;
-        recommencerPartie(btnStartGame, btnRestartGame, tableauxImages, tableauxNbrsAleatoires, frontSidecards);
-    },500) 
+    function victory(){
+        clearInterval(timerInterval);
+        playerTime.textContent = `${CompteurHours.textContent} : ${CompteurMin.textContent} : ${CompteurSec.textContent}`; 
+        modal.style.display = "block";
+    }
+    init();
 })

@@ -15,8 +15,9 @@
       href="https://fonts.googleapis.com/css2?family=Frijole&display=swap"
       rel="stylesheet"
     />
-    <script type="module" src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
   </head>
+
   <body>
     <header>
       <h1>Bienvenue au jeu MEMORIES</h1>
@@ -24,102 +25,128 @@
         <h2>Difficulté</h2>
         <div class="container-easy">
           <label for="easy">Facile </label><span>😊</span>
-          <input type="radio" id="easy" name="difficult" checked />
+          <input
+            type="radio"
+            id="easy"
+            name="difficulty"
+            value="easy"
+            checked
+          />
         </div>
         <div class="container-normal">
           <label for="normal">Normal </label><span>🤔</span>
-          <input type="radio" id="normal" name="difficult" />
+          <input type="radio" id="normal" name="difficulty" value="normal" />
         </div>
         <div class="container-difficult">
           <label for="difficult">Difficile </label><span>🥵</span>
-          <input type="radio" id="difficult" name="difficult" />
+          <input type="radio" id="difficult" name="difficulty" value="hard" />
         </div>
         <h2>Choix du dos de cartes</h2>
         <div class="container-back-side-card">
-            <img src="./images/dos-Magic.jpg" alt="dos de carte magic" id="magicCard">
-            <img src="./images/dos-pokemon.jpg" alt="dos de carte pokemon" id="pokemonCard">
-            <img src="./images/dos-yu-gi-oh.jpg" alt="dos de carte yu-gi-oh" id="yugiohCard">
+          <img
+            src="./images/dos-Magic.jpg"
+            alt="dos de carte magic"
+            id="magicCard"
+          />
+          <img
+            src="./images/dos-pokemon.jpg"
+            alt="dos de carte pokemon"
+            id="pokemonCard"
+          />
+          <img
+            src="./images/dos-yu-gi-oh.jpg"
+            alt="dos de carte yu-gi-oh"
+            id="yugiohCard"
+          />
         </div>
-    </div>
+      </div>
     </header>
+    <div class="modal-victory">
+      <div class="modal-content">
+          <h2>Victoire !</h2>
+          <p>Félicitations, vous avez gagné !</p>
+          <p>Votre temps : <span class="player-time"></span></p>
+          <button class="btn btn-restartGame">Rejouer</button>
+      </div>
+    </div>
     <main>
       <h3>TEMPS</h3>
       <div class="compteur">
         <div class="compteur-hours compteur-items">00</div>
         <div class="compteur-min compteur-items">00</div>
         <div class="compteur-sec compteur-items">00</div>
-      </div>
+      </div>   
       <div class="card-container">
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
         <div class="card">
           <div class="side side--front"></div>
           <div class="side side--back">
-            <img src="images/dos-yu-gi-oh.jpg" alt="dos de carte verte" />
+            <img src="images/dos-Magic.jpg">
           </div>
         </div>
       </div>
