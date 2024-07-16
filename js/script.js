@@ -4,11 +4,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     const restartButton = document.querySelectorAll('.btn-restartGame');
     const difficultRadios = document.querySelectorAll('input[name="difficulty"]');
     const backCards = document.querySelectorAll('.container-back-side-card>img');
-    const modal = document.querySelector(".modal-victory");
+    const modalVictory = document.querySelector(".modal-victory");
+    const modalDefeat = document.querySelector(".modal-defeat");
     const playerTime = document.querySelector(".player-time");
-    const CompteurHours = document.querySelector(".compteur-hours");
-    const CompteurMin = document.querySelector(".compteur-min");
-    const CompteurSec = document.querySelector(".compteur-sec");
+    const compteurHours = document.querySelector(".compteur-hours");
+    const compteurMin = document.querySelector(".compteur-min");
+    const compteurSec = document.querySelector(".compteur-sec");
 
     let imgBackSides;
     let timerInterval;
@@ -23,6 +24,15 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     //Initialize the game
     function init(){
+        let timeLimit = getTimeLimit(),
+            minLimit = parseInt(timeLimit/60,10),
+            secLimit = parseInt(timeLimit % 60,10);
+
+        minLimit = minLimit < 10 ? "0" + minLimit : minLimit;
+        
+        compteurMin.textContent = minLimit;
+        compteurSec.textContent = secLimit;
+        
         difficultRadios.forEach(radio=>{
             radio.addEventListener('change',handleDifficultyChange);
         });
@@ -33,8 +43,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 
         startButton.removeAttribute('disabled');
         startButton.removeAttribute('style');
-        restartButton[1].disabled="true";
-        restartButton[1].style="box-shadow:none";
+        restartButton[2].disabled = true;
+        restartButton[2].style="box-shadow:none;opacity:0.4;cursor:initial;";
 
         startButton.addEventListener('click',()=>startGame());
         generateGrid();
@@ -51,7 +61,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     //handle difficulty change
     function handleDifficultyChange(event){
         difficulty = event.target.value;
+        let timeLimit = getTimeLimit(),
+            minLimit = parseInt(timeLimit/60,10),
+            secLimit = parseInt(timeLimit % 60,10);
+
+        minLimit = minLimit < 10 ? "0" + minLimit : minLimit;
+        secLimit = secLimit < 10 ? "0" + secLimit : secLimit;
+        compteurMin.textContent = minLimit;
+        compteurSec.textContent = secLimit;
         generateGrid();
+
     }
 
     //generate the card grid based on the selected difficulty
@@ -60,7 +79,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         const numCards = getNumCards();
         cardImages = generateCardImages(numCards);
         cardImages = shuffleArray(cardImages);
-
         cards = cardImages.map(image=>createCardElement(image));
         cards.forEach(card=>cardContainer.appendChild(card));
     }
@@ -152,12 +170,17 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     //start the game
     function startGame(){
-        startButton.disabled="true";
-        startButton.style.boxShadow = "none";
-        restartButton[1].removeAttribute('disabled');
-        restartButton[1].removeAttribute('style');
+        startButton.disabled = true;
+        startButton.style="opacity:0.5;box-shadow:none;cursor:initial;"
+
+        difficultRadios.forEach(radio=>{
+            radio.removeEventListener("change",handleDifficultyChange);
+        });
+
         restartButton.forEach(button=>{
             button.addEventListener('click',resetGame);
+            button.disabled=false;
+            button.style="";
         });
         shuffleArray(cardImages);
         cards.forEach((card,index)=>{
@@ -170,15 +193,37 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     function resetGame(){
-        modal.style.display="none";
+
+        modalVictory.style.display="none";
+        modalDefeat.style.display="none";
         clearInterval(timerInterval);
         pairsRevealed = 0;
+        resetBoard();
         generateGrid();
-        init();
+        startButton.disabled = false;
+        startButton.style = "";
+
+        restartButton.forEach(button=>{
+            button.disabled = true;
+            button.style = "box-shadow:none;opacity:0.4;cursor:initial;";
+
+            let timeLimit = getTimeLimit(),
+                minLimit = parseInt(timeLimit/60,10),
+                secLimit = parseInt(timeLimit % 60,10);
+
+            minLimit = minLimit < 10 ? "0" + minLimit : minLimit;
+            secLimit = secLimit < 10 ? "0" + secLimit : secLimit;
+            compteurMin.textContent = minLimit;
+            compteurSec.textContent = secLimit;
+
+            difficultRadios.forEach(radio=>{
+                radio.addEventListener('change',handleDifficultyChange);
+            });
+        });
     }
 
     function getTimeLimit(){
-        return difficulty === "easy" ? 60 : difficulty ==='normal' ? 120 : 180;
+        return difficulty === "easy" ? 45 : difficulty ==='normal' ? 90 : 135;
     }
 
     function startTimer(duration){
@@ -196,16 +241,20 @@ document.addEventListener('DOMContentLoaded',()=>{
             document.querySelector('.compteur-sec').textContent = seconds;
 
             if(--timer < 0){
-                clearInterval(timerInterval);
-                alert("Temps écoulé !");
+                 defeat();
             }
         },1000)
     }
 
     function victory(){
         clearInterval(timerInterval);
-        playerTime.textContent = `${CompteurHours.textContent} : ${CompteurMin.textContent} : ${CompteurSec.textContent}`; 
-        modal.style.display = "block";
+        playerTime.textContent = `${compteurHours.textContent} : ${compteurMin.textContent} : ${compteurSec.textContent}`; 
+        modalVictory.style.display = "block";
+    }
+
+    function defeat(){
+        clearInterval(timerInterval);
+        modalDefeat.style.display = "block";
     }
     init();
 })
